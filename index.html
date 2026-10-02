@@ -1,0 +1,1012 @@
+<style>
+/* TABLE STYLING */
+.styled-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: Arial, sans-serif;
+    margin: 20px 0;
+    font-size: 14px;
+}
+.styled-table thead tr {
+    background-color: #003049; /* Navy */
+    color: #ffffff;
+    text-align: left;
+}
+.styled-table th, .styled-table td {
+    padding: 10px 12px;
+    border: 1px solid #dddddd;
+    vertical-align: middle;
+}
+.styled-table tbody tr:nth-child(even) {
+    background-color: #f8fbff;
+}
+.styled-table tbody tr:hover {
+    background-color: #eaf3fc;
+}
+
+/* BADGES */
+.badge {
+    padding: 4px 8px;
+    border-radius: 5px;
+    color: #fff;
+    font-size: 12px;
+    font-weight: bold;
+    display: inline-block;
+}
+.badge-market { background-color: #ff6f61; }
+.badge-lifestyle { background-color: #ff6f61; }
+.badge-museum { background-color: #2ec4b6; }
+.badge-mall { background-color: #4361ee; }
+.badge-attraction { background-color: #3a0ca3; }
+.badge-show { background-color: #f72585; }
+.badge-landmark { background-color: #7209b7; }
+.badge-themepark { background-color: #ff9f1c; }
+.badge-beach { background-color: #2ec4b6; }
+.badge-adventure { background-color: #d00000; }
+.badge-garden { background-color: #80b918; }
+.badge-park { background-color: #2b9348; }
+.badge-cultural { background-color: #ff4d6d; }
+
+/* DETAILS BUTTON */
+.details-btn {
+    background-color: #2ec4b6; /* Teal */
+    color: white;
+    padding: 7px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: bold;
+    transition: 0.2s;
+}
+.details-btn:hover {
+    background-color: #1ea89c;
+}
+
+/* MAP BUTTON */
+.map-btn {
+    background-color: #003049;
+    color: #fff;
+    padding: 3px 8px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 11px;
+    margin-left: 6px;
+}
+
+/* COLLAPSIBLE CONTENT */
+.details-content {
+    display: none;
+    padding: 14px 18px;
+    background-color: #fff8f0;
+    border-left: 4px solid #f77f00;
+    border-radius: 4px;
+    margin: 6px 0;
+    line-height: 1.6;
+}
+.fee-highlight {
+    color: #b02a37;
+    font-weight: bold;
+}
+.parking-highlight {
+    color: #003049;
+    font-weight: bold;
+}
+
+/* NOTE SECTION */
+.note-container {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 170px;
+}
+.note-input {
+    width: 100%;
+    min-height: 48px;
+    resize: vertical;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 5px 7px;
+    font-size: 12px;
+    font-family: inherit;
+    box-sizing: border-box;
+}
+.note-input:focus {
+    outline: none;
+    border-color: #003049;
+    box-shadow: 0 0 3px rgba(0,48,73,0.3);
+}
+.note-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.char-count {
+    font-size: 11px;
+    color: #6c757d;
+}
+.save-btn {
+    background-color: #003049;
+    color: white;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    cursor: pointer;
+}
+.save-btn:hover {
+    background-color: #024b73;
+}
+.save-indicator {
+    font-size: 11px;
+    color: #2b9348;
+    display: none;
+    font-weight: bold;
+}
+
+/* BANNER */
+.hotel-banner {
+    background: #eef4f8;
+    border: 1px solid #b8d0e0;
+    border-radius: 6px;
+    padding: 12px 16px;
+    margin-bottom: 12px;
+    font-size: 14px;
+    color: #003049;
+}
+.note-banner {
+    background: #fff3cd;
+    border: 1px solid #ffeeba;
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    color: #856404;
+}
+
+@media (max-width: 900px) {
+    .styled-table { font-size: 13px; }
+    .details-content { display: block !important; }
+    .details-btn { display: none; }
+}
+</style>
+
+<div class="hotel-banner">
+    🏨 <strong>Base Location:</strong> Premier Inn Dubai Barsha Heights (Tecom) &nbsp;|&nbsp; 
+    🅿️ <strong>Hotel Parking:</strong> Free basement self-parking available on-site for registered guests &nbsp;|&nbsp;
+    🚇 <strong>Metro:</strong> Dubai Internet City Metro (~850m)
+</div>
+
+<div class="note-banner">
+    ⏱️ <strong>Schedule Notes:</strong> Oct 16 check-in starts at 2:00 PM. Oct 19 & Oct 20 schedules are designed to return back to Premier Inn before 5:00 PM.
+</div>
+
+<script>
+function toggleDetails(id) {
+    var content = document.getElementById(id);
+    content.style.display = (content.style.display === "block") ? "none" : "block";
+}
+
+function updateCharCount(id) {
+    var area = document.getElementById('note-' + id);
+    var count = document.getElementById('count-' + id);
+    count.textContent = (1000 - area.value.length) + " left";
+}
+
+function saveNote(id) {
+    var area = document.getElementById('note-' + id);
+    var indicator = document.getElementById('save-status-' + id);
+    localStorage.setItem('dubai_note_' + id, area.value);
+    indicator.style.display = 'inline';
+    setTimeout(function() {
+        indicator.style.display = 'none';
+    }, 2000);
+}
+
+window.addEventListener('DOMContentLoaded', function() {
+    var textareas = document.querySelectorAll('.note-input');
+    textareas.forEach(function(area) {
+        var id = area.id.replace('note-', '');
+        var saved = localStorage.getItem('dubai_note_' + id);
+        if (saved !== null) {
+            area.value = saved;
+        }
+        updateCharCount(id);
+    });
+});
+</script>
+
+<table class="styled-table">
+<thead>
+<tr>
+<th>Date</th>
+<th>Day</th>
+<th>Place</th>
+<th>Duration</th>
+<th>Category</th>
+<th>Details</th>
+<th>Notes (Up to 1000 chars)</th>
+</tr>
+</thead>
+<tbody>
+
+<!-- DAY 1: DUBAI MARINA & JBR (OCT 16 - POST 2 PM ARRIVAL) -->
+<tr>
+<td>Oct 16</td>
+<td>Day 1</td>
+<td>🚶 Marina Walk</td>
+<td>2 hrs (Afternoon)</td>
+<td><span class="badge badge-lifestyle">Lifestyle</span></td>
+<td><button class="details-btn" onclick="toggleDetails('d1')">View Details</button></td>
+<td>
+    <div class="note-container">
+        <textarea id="note-d1" class="note-input" maxlength="1000" oninput="updateCharCount('d1')" placeholder="Add notes here..."></textarea>
+        <div class="note-actions">
+            <span id="count-d1" class="char-count">1000 left</span>
+            <div>
+                <span id="save-status-d1" class="save-indicator">Saved!</span>
+                <button class="save-btn" onclick="saveNote('d1')">Save</button>
+            </div>
+        </div>
+    </div>
+</td>
+</tr>
+<tr><td colspan="7">
+<div id="d1" class="details-content">
+<strong>Entry Fee:</strong> <span class="fee-highlight">Free</span><br>
+<strong>Nearest Public Parking:</strong> <span class="parking-highlight">Dubai Marina Mall Car Park</span> (Sheikh Zayed Rd / Al Marsa St) — Free for first 3 hours; or GreenParking at Marina Terrace.<br>
+<strong>Address:</strong> Dubai Marina Promenade (5 mins drive from Premier Inn)<br>
+<strong>Google Maps:</strong> <a href="https://www.google.com/maps/place/Dubai+Marina+Walk" target="_blank">Open Map</a><a class="map-btn" href="https://www.google.com/maps/place/Dubai+Marina+Walk" target="_blank">Map</a><br>
+<strong>Food Nearby:</strong> Pier 7, Café Bateel, Massimo's Italian
+</div>
+</td></tr>
+
+<tr>
+<td>Oct 16</td>
+<td>Day 1</td>
+<td>🏖️ JBR Beach</td>
+<td>2 hrs (Sunset)</td>
+<td><span class="badge badge-beach">Beach</span></td>
+<td><button class="details-btn" onclick="toggleDetails('d2')">View Details</button></td>
+<td>
+    <div class="note-container">
+        <textarea id="note-d2" class="note-input" maxlength="1000" oninput="updateCharCount('d2')" placeholder="Add notes here..."></textarea>
+        <div class="note-actions">
+            <span id="count-d2" class="char-count">1000 left</span>
+            <div>
+                <span id="save-status-d2" class="save-indicator">Saved!</span>
+                <button class="save-btn" onclick="saveNote('d2')">Save</button>
+            </div>
+        </div>
+    </div>
+</td>
+</tr>
+<tr><td colspan="7">
+<div id="d2" class="details-content">
+<strong>Entry Fee:</strong> <span class="fee-highlight">Free (Public Beach)</span><br>
+<strong>Nearest Public Parking:</strong> <span class="parking-highlight">The Beach Underground Car Park</span> (Al Mamsha St, JBR) — ~AED 20/hr, or validated free for 3 hrs with AED 100+ spend at beach outlets.<br>
+<strong>Address:</strong> The Beach at JBR<br>
+<strong>Google Maps:</strong> <a href="https://www.google.com/maps/place/JBR+Beach" target="_blank">Open Map</a><a class="map-btn" href="https://www.google.com/maps/place/JBR+Beach" target="_blank">Map</a><br>
+<strong>Food Nearby:</strong> Operation Falafel, Five Guys, Catch 22
+</div>
+</td></tr>
+
+<tr>
+<td>Oct 16</td>
+<td>Day 1</td>
+<td>🌊 Bluewaters & Ain Dubai</td>
+<td>1.5 hrs</td>
+<td><span class="badge badge-lifestyle">Lifestyle</span></td>
+<td><button class="details-btn" onclick="toggleDetails('d3')">View Details</button></td>
+<td>
+    <div class="note-container">
+        <textarea id="note-d3" class="note-input" maxlength="1000" oninput="updateCharCount('d3')" placeholder="Add notes here..."></textarea>
+        <div class="note-actions">
+            <span id="count-d3" class="char-count">1000 left</span>
+            <div>
+                <span id="save-status-d3" class="save-indicator">Saved!</span>
+                <button class="save-btn" onclick="saveNote('d3')">Save</button>
+            </div>
+        </div>
+    </div>
+</td>
+</tr>
+<tr><td colspan="7">
+<div id="d3" class="details-content">
+<strong>Entry Fee:</strong> <span class="fee-highlight">Free (Exterior Photo Stop)</span><br>
+<strong>Nearest Public Parking:</strong> <span class="parking-highlight">Bluewaters Basement Visitor Parking</span> (Wharf / The Walk) — AED 20/hr (Free 3 hrs with AED 100+ spend).<br>
+<strong>Address:</strong> Bluewaters Island (reached by bridge from JBR or direct ramp off E11)<br>
+<strong>Google Maps:</strong> <a href="https://www.google.com/maps/place/Bluewaters+Island" target="_blank">Open Map</a><a class="map-btn" href="https://www.google.com/maps/place/Bluewaters+Island" target="_blank">Map</a><br>
+<strong>Food Nearby:</strong> Alici, The London Project, Hell’s Kitchen
+</div>
+</td></tr>
+
+<tr>
+<td>Oct 16</td>
+<td>Day 1</td>
+<td>⛵ Marina Dhow Cruise</td>
+<td>2 hrs (Evening)</td>
+<td><span class="badge badge-attraction">Attraction</span></td>
+<td><button class="details-btn" onclick="toggleDetails('d4')">View Details</button></td>
+<td>
+    <div class="note-container">
+        <textarea id="note-d4" class="note-input" maxlength="1000" oninput="updateCharCount('d4')" placeholder="Add notes here..."></textarea>
+        <div class="note-actions">
+            <span id="count-d4" class="char-count">1000 left</span>
+            <div>
+                <span id="save-status-d4" class="save-indicator">Saved!</span>
+                <button class="save-btn" onclick="saveNote('d4')">Save</button>
+            </div>
+        </div>
+    </div>
+</td>
+</tr>
+<tr><td colspan="7">
+<div id="d4" class="details-content">
+<strong>Entry Fee:</strong> <span class="fee-highlight">~AED 120 – 180 (includes buffet dinner)</span><br>
+<strong>Nearest Public Parking:</strong> <span class="parking-highlight">Dubai Marina Mall Parking</span> or <span class="parking-highlight">Marina Yacht Club Parking</span> (Al Marsa St) — RTA on-street zones (Zone 382J) nearby.<br>
+<strong>Address:</strong> Dubai Marina Harbour Promenade (behind Marina Mall)<br>
+<strong>Google Maps:</strong> <a href="https://www.google.com/maps/place/Dubai+Marina" target="_blank">Open Map</a><a class="map-btn" href="https://www.google.com/maps/place/Dubai+Marina" target="_blank">Map</a><br>
+<strong>Food Nearby:</strong> Dinner included on cruise
+</div>
+</td></tr>
+
+<!-- DAY 2: PALM JUMEIRAH (OCT 17) -->
+<tr>
+<td>Oct 17</td>
+<td>Day 2</td>
+<td>🚝 Palm Monorail Ride</td>
+<td>30 mins</td>
+<td><span class="badge badge-attraction">Attraction</span></td>
+<td><button class="details-btn" onclick="toggleDetails('d5')">View Details</button></td>
+<td>
+    <div class="note-container">
+        <textarea id="note-d5" class="note-input" maxlength="1000" oninput="updateCharCount('d5')" placeholder="Add notes here..."></textarea>
+        <div class="note-actions">
+            <span id="count-d5" class="char-count">1000 left</span>
+            <div>
+                <span id="save-status-d5" class="save-indicator">Saved!</span>
+                <button class="save-btn" onclick="saveNote('d5')">Save</button>
+            </div>
+        </div>
+    </div>
+</td>
+</tr>
+<tr><td colspan="7">
+<div id="d5" class="details-content">
+<strong>Entry Fee:</strong> <span class="fee-highlight">AED 10 – 20 one-way / AED 15 – 30 round-trip</span><br>
+<strong>Nearest Public Parking:</strong> <span class="parking-highlight">Palm Gateway Multi-Storey Car Park</span> (Al Sufouh Rd, King Salman Bin Abdulaziz Al Saud St) — Free for Monorail users with ticket validation.<br>
+<strong>Address:</strong> Palm Gateway Station, Al Sufouh<br>
+<strong>Google Maps:</strong> <a href="https://www.google.com/maps/place/Palm+Gateway+Monorail+Station" target="_blank">Open Map</a><a class="map-btn" href="https://www.google.com/maps/place/Palm+Gateway+Monorail+Station" target="_blank">Map</a>
+</div>
+</td></tr>
+
+<tr>
+<td>Oct 17</td>
+<td>Day 2</td>
+<td>🌊 Atlantis Aquaventure & Lost Chambers</td>
+<td>5 hrs</td>
+<td><span class="badge badge-themepark">Theme Park</span></td>
+<td><button class="details-btn" onclick="toggleDetails('d6')">View Details</button></td>
+<td>
+    <div class="note-container">
+        <textarea id="note-d6" class="note-input" maxlength="1000" oninput="updateCharCount('d6')" placeholder="Add notes here..."></textarea>
+        <div class="note-actions">
+            <span id="count-d6" class="char-count">1000 left</span>
+            <div>
+                <span id="save-status-d6" class="save-indicator">Saved!</span>
+                <button class="save-btn" onclick="saveNote('d6')">Save</button>
+            </div>
+        </div>
+    </div>
+</td>
+</tr>
+<tr><td colspan="7">
+<div id="d6" class="details-content">
+<strong>Entry Fee:</strong> <span class="fee-highlight">Aquaventure: ~AED 345 – 395 | Lost Chambers: ~AED 135</span><br>
+<strong>Nearest Public Parking:</strong> <span class="parking-highlight">Aquaventure Visitor Parking (P17 / P18)</span> (Crescent Rd, Palm Jumeirah) — Complimentary shuttle vans run directly to the ticket gates.<br>
+<strong>Address:</strong> Atlantis The Palm, Crescent Road<br>
+<strong>Google Maps:</strong> <a href="https://www.google.com/maps/place/Aquaventure+Waterpark" target="_blank">Open Map</a><a class="map-btn" href="https://www.google.com/maps/place/Aquaventure+Waterpark" target="_blank">Map</a><br>
+<strong>Food Nearby:</strong> Barracudas, Shark Bites, Wavehouse
+</div>
+</td></tr>
+
+<tr>
+<td>Oct 17</td>
+<td>Day 2</td>
+<td>🌴 Palm Boardwalk & The Pointe</td>
+<td>2.5 hrs</td>
+<td><span class="badge badge-lifestyle">Lifestyle</span></td>
+<td><button class="details-btn" onclick="toggleDetails('d7')">View Details</button></td>
+<td>
+    <div class="note-container">
+        <textarea id="note-d7" class="note-input" maxlength="1000" oninput="updateCharCount('d7')" placeholder="Add notes here..."></textarea>
+        <div class="note-actions">
+            <span id="count-d7" class="char-count">1000 left</span>
+            <div>
+                <span id="save-status-d7" class="save-indicator">Saved!</span>
+                <button class="save-btn" onclick="saveNote('d7')">Save</button>
+            </div>
+        </div>
+    </div>
+</td>
+</tr>
+<tr><td colspan="7">
+<div id="d7" class="details-content">
+<strong>Entry Fee:</strong> <span class="fee-highlight">Free</span><br>
+<strong>Nearest Public Parking:</strong> <span class="parking-highlight">The Pointe West/East Car Park</span> or Boardwalk Crescent Public Bays (over 1,600 dedicated bays; validation available at dining venues).<br>
+<strong>Address:</strong> The Crescent & Trunk, Palm Jumeirah<br>
+<strong>Google Maps:</strong> <a href="https://www.google.com/maps/place/The+Pointe" target="_blank">Open Map</a><a class="map-btn" href="https://www.google.com/maps/place/The+Pointe" target="_blank">Map</a><br>
+<strong>Food Nearby:</strong> Al Safadi, Rue Royale, Chuan
+</div>
+</td></tr>
+
+<!-- DAY 3: MOE, GARDENS & GLOBAL VILLAGE (OCT 18) -->
+<tr>
+<td>Oct 18</td>
+<td>Day 3</td>
+<td>🛒 Mall of the Emirates & Ski Dubai</td>
+<td>3.5 hrs</td>
+<td><span class="badge badge-mall">Mall</span></td>
+<td><button class="details-btn" onclick="toggleDetails('d8')">View Details</button></td>
+<td>
+    <div class="note-container">
+        <textarea id="note-d8" class="note-input" maxlength="1000" oninput="updateCharCount('d8')" placeholder="Add notes here..."></textarea>
+        <div class="note-actions">
+            <span id="count-d8" class="char-count">1000 left</span>
+            <div>
+                <span id="save-status-d8" class="save-indicator">Saved!</span>
+                <button class="save-btn" onclick="saveNote('d8')">Save</button>
+            </div>
+        </div>
+    </div>
+</td>
+</tr>
+<tr><td colspan="7">
+<div id="d8" class="details-content">
+<strong>Entry Fee:</strong> <span class="fee-highlight">Mall: Free | Ski Dubai: From ~AED 220</span><br>
+<strong>Nearest Public Parking:</strong> <span class="parking-highlight">Mall of the Emirates Multi-Tier Car Park</span> (Sheikh Zayed Rd / Al Barsha 1) — Free for first 4 hours on weekdays; free all day weekends/public holidays.<br>
+<strong>Address:</strong> Sheikh Zayed Rd, Al Barsha 1 (7 mins drive from Premier Inn Barsha Heights)<br>
+<strong>Google Maps:</strong> <a href="https://www.google.com/maps/place/Mall+of+the+Emirates" target="_blank">Open Map</a><a class="map-btn" href="https://www.google.com/maps/place/Mall+of+the+Emirates" target="_blank">Map</a><br>
+<strong>Food Nearby:</strong> Din Tai Fung, Tribes, Texas de Brazil
+</div>
+</td></tr>
+
+<tr>
+<td>Oct 18</td>
+<td>Day 3</td>
+<td>🌸 Miracle Garden & Butterfly Garden</td>
+<td>3 hrs</td>
+<td><span class="badge badge-garden">Garden</span></td>
+<td><button class="details-btn" onclick="toggleDetails('d9')">View Details</button></td>
+<td>
+    <div class="note-container">
+        <textarea id="note-d9" class="note-input" maxlength="1000" oninput="updateCharCount('d9')" placeholder="Add notes here..."></textarea>
+        <div class="note-actions">
+            <span id="count-d9" class="char-count">1000 left</span>
+            <div>
+                <span id="save-status-d9" class="save-indicator">Saved!</span>
+                <button class="save-btn" onclick="saveNote('d9')">Save</button>
+            </div>
+        </div>
+    </div>
+</td>
+</tr>
+<tr><td colspan="7">
+<div id="d9" class="details-content">
+<strong>Entry Fee:</strong> <span class="fee-highlight">Miracle: AED 100 (Adults) / AED 85 (Kids) | Butterfly: AED 55</span><br>
+<strong>Nearest Public Parking:</strong> <span class="parking-highlight">Dubai Miracle Garden Main Open Parking Lot</span> (Al Barsha South 3) — Free open-air parking directly in front of the gates with 2,000+ slots.<br>
+<strong>Address:</strong> Street 3, Al Barsha South 3<br>
+<strong>Google Maps:</strong> <a href="https://www.google.com/maps/place/Dubai+Miracle+Garden" target="_blank">Open Map</a><a class="map-btn" href="https://www.google.com/maps/place/Dubai+Miracle+Garden" target="_blank">Map</a><br>
+<strong>Food Nearby:</strong> Garden food stalls & kiosks
+</div>
+</td></tr>
+
+<tr>
+<td>Oct 18</td>
+<td>Day 3</td>
+<td>🌍 Global Village</td>
+<td>4 hrs (Evening)</td>
+<td><span class="badge badge-cultural">Cultural</span></td>
+<td><button class="details-btn" onclick="toggleDetails('d10')">View Details</button></td>
+<td>
+    <div class="note-container">
+        <textarea id="note-d10" class="note-input" maxlength="1000" oninput="updateCharCount('d10')" placeholder="Add notes here..."></textarea>
+        <div class="note-actions">
+            <span id="count-d10" class="char-count">1000 left</span>
+            <div>
+                <span id="save-status-d10" class="save-indicator">Saved!</span>
+                <button class="save-btn" onclick="saveNote('d10')">Save</button>
+            </div>
+        </div>
+    </div>
+</td>
+</tr>
+<tr><td colspan="7">
+<div id="d10" class="details-content">
+<strong>Entry Fee:</strong> <span class="fee-highlight">AED 25 – 30</span><br>
+<strong>Nearest Public Parking:</strong> <span class="parking-highlight">Global Village General Parking (Zones P1–P12)</span> (Sheikh Mohammed Bin Zayed Rd Exit 37) — Free general parking; paid VIP/Premium zones closer to Gate of the World.<br>
+<strong>Address:</strong> Exit 37, E311, Dubailand<br>
+<strong>Google Maps:</strong> <a href="https://www.google.com/maps/place/Global+Village" target="_blank">Open Map</a><a class="map-btn" href="https://www.google.com/maps/place/Global+Village" target="_blank">Map</a><br>
+<strong>Food Nearby:</strong> 90+ cultural street food stalls and floating market
+</div>
+</td></tr>
+
+<!-- DAY 4: DOWNTOWN & SIGHTS (OCT 19 - RETURN TO HOTEL BEFORE 5 PM) -->
+<tr>
+<td>Oct 19</td>
+<td>Day 4</td>
+<td>🖼️ Dubai Frame</td>
+<td>2 hrs (9:30 AM – 11:30 AM)</td>
+<td><span class="badge badge-landmark">Landmark</span></td>
+<td><button class="details-btn" onclick="toggleDetails('d11')">View Details</button></td>
+<td>
+    <div class="note-container">
+        <textarea id="note-d11" class="note-input" maxlength="1000" oninput="updateCharCount('d11')" placeholder="Add notes here..."></textarea>
+        <div class="note-actions">
+            <span id="count-d11" class="char-count">1000 left</span>
+            <div>
+                <span id="save-status-d11" class="save-indicator">Saved!</span>
+                <button class="save-btn" onclick="saveNote('d11')">Save</button>
+            </div>
+        </div>
+    </div>
+</td>
+</tr>
+<tr><td colspan="7">
+<div id="d11" class="details-content">
+<strong>Entry Fee:</strong> <span class="fee-highlight">AED 52.50 (Adults) / AED 21 (Child 3–12)</span><br>
+<strong>Nearest Public Parking:</strong> <span class="parking-highlight">Zabeel Park Gate 4 Parking</span> (Sheikh Rashid Rd, Zabeel) — Dedicated visitor surface parking (free for ticket holders / standard RTA rate).<br>
+<strong>Address:</strong> Zabeel Park Gate 4, Dubai<br>
+<strong>Google Maps:</strong> <a href="https://www.google.com/maps/place/Dubai+Frame" target="_blank">Open Map</a><a class="map-btn" href="https://www.google.com/maps/place/Dubai+Frame" target="_blank">Map</a><br>
+<strong>Food Nearby:</strong> Zabeel Park cafés, Wafi Mall
+</div>
+</td></tr>
+
+<tr>
+<td>Oct 19</td>
+<td>Day 4</td>
+<td>🏛️ Museum of the Future</td>
+<td>2 hrs (12:30 PM – 2:30 PM)</td>
+<td><span class="badge badge-museum">Museum</span></td>
+<td><button class="details-btn" onclick="toggleDetails('d12')">View Details</button></td>
+<td>
+    <div class="note-container">
+        <textarea id="note-d12" class="note-input" maxlength="1000" oninput="updateCharCount('d12')" placeholder="Add notes here..."></textarea>
+        <div class="note-actions">
+            <span id="count-d12" class="char-count">1000 left</span>
+            <div>
+                <span id="save-status-d12" class="save-indicator">Saved!</span>
+                <button class="save-btn" onclick="saveNote('d12')">Save</button>
+            </div>
+        </div>
+    </div>
+</td>
+</tr>
+<tr><td colspan="7">
+<div id="d12" class="details-content">
+<strong>Entry Fee:</strong> <span class="fee-highlight">AED 169 (Ages 4+)</span><br>
+<strong>Nearest Public Parking:</strong> <span class="parking-highlight">Museum of the Future Basement Parking</span> (Sheikh Zayed Rd, Trade Centre 2) — Free 3 hours for ticket holders on visit day. Backup: Emirates Towers Metro Park & Ride or DIFC Gate Precinct Parking.<br>
+<strong>Address:</strong> Sheikh Zayed Rd, Trade Centre 2<br>
+<strong>Google Maps:</strong> <a href="https://www.google.com/maps/place/Museum+of+the+Future" target="_blank">Open Map</a><a class="map-btn" href="https://www.google.com/maps/place/Museum+of+the+Future" target="_blank">Map</a><br>
+<strong>Food Nearby:</strong> MOTF Lobby Café, Zuma DIFC, LPM Restaurant
+</div>
+</td></tr>
+
+<tr>
+<td>Oct 19</td>
+<td>Day 4</td>
+<td>🏨 Return to Premier Inn Barsha Heights</td>
+<td>Rest & Evening</td>
+<td><span class="badge badge-lifestyle">Lifestyle</span></td>
+<td><button class="details-btn" onclick="toggleDetails('d13')">View Details</button></td>
+<td>
+    <div class="note-container">
+        <textarea id="note-d13" class="note-input" maxlength="1000" oninput="updateCharCount('d13')" placeholder="Add notes here..."></textarea>
+        <div class="note-actions">
+            <span id="count-d13" class="char-count">1000 left</span>
+            <div>
+                <span id="save-status-d13" class="save-indicator">Saved!</span>
+                <button class="save-btn" onclick="saveNote('d13')">Save</button>
+            </div>
+        </div>
+    </div>
+</td>
+</tr>
+<tr><td colspan="7">
+<div id="d13" class="details-content">
+<strong>Entry Fee:</strong> <span class="fee-highlight">N/A</span><br>
+<strong>Timing Note:</strong> <span class="parking-highlight">Depart DIFC area by 3:45 PM</span> to comfortably reach Premier Inn Barsha Heights by 4:15 PM – 4:30 PM (well ahead of your 5:00 PM milestone).<br>
+<strong>Hotel Parking:</strong> Use hotel guest key card for barrier access to Premier Inn basement parking.
+</div>
+</td></tr>
+
+<!-- DAY 5: OLD DUBAI & CREEK (OCT 20 - RETURN TO HOTEL BEFORE 5 PM) -->
+<tr>
+<td>Oct 20</td>
+<td>Day 5</td>
+<td>💍 Gold Souk & Spice Souk</td>
+<td>2 hrs (9:00 AM – 11:00 AM)</td>
+<td><span class="badge badge-market">Market</span></td>
+<td><button class="details-btn" onclick="toggleDetails('d14')">View Details</button></td>
+<td>
+    <div class="note-container">
+        <textarea id="note-d14" class="note-input" maxlength="1000" oninput="updateCharCount('d14')" placeholder="Add notes here..."></textarea>
+        <div class="note-actions">
+            <span id="count-d14" class="char-count">1000 left</span>
+            <div>
+                <span id="save-status-d14" class="save-indicator">Saved!</span>
+                <button class="save-btn" onclick="saveNote('d14')">Save</button>
+            </div>
+        </div>
+    </div>
+</td>
+</tr>
+<tr><td colspan="7">
+<div id="d14" class="details-content">
+<strong>Entry Fee:</strong> <span class="fee-highlight">Free</span><br>
+<strong>Nearest Public Parking:</strong> <span class="parking-highlight">Gold Souk Multi-Storey Parking Building (Maryam Plaza)</span> (78 Al Khor St, Deira) or <span class="parking-highlight">Al Sabkha Multi-Storey Car Park</span> — RTA rate ~AED 4/hr.<br>
+<strong>Address:</strong> Sikkat Al Khail Rd / Al Khor St, Deira<br>
+<strong>Google Maps:</strong> <a href="https://www.google.com/maps/place/Gold+Souk,+Dubai" target="_blank">Open Map</a><a class="map-btn" href="https://www.google.com/maps/place/Gold+Souk,+Dubai" target="_blank">Map</a><br>
+<strong>Food Nearby:</strong> Al Baik Deira, Arabian Tea House
+</div>
+</td></tr>
+
+<tr>
+<td>Oct 20</td>
+<td>Day 5</td>
+<td>🛶 Abra Ride across Dubai Creek</td>
+<td>30 mins</td>
+<td><span class="badge badge-attraction">Attraction</span></td>
+<td><button class="details-btn" onclick="toggleDetails('d15')">View Details</button></td>
+<td>
+    <div class="note-container">
+        <textarea id="note-d15" class="note-input" maxlength="1000" oninput="updateCharCount('d15')" placeholder="Add notes here..."></textarea>
+        <div class="note-actions">
+            <span id="count-d15" class="char-count">1000 left</span>
+            <div>
+                <span id="save-status-d15" class="save-indicator">Saved!</span>
+                <button class="save-btn" onclick="saveNote('d15')">Save</button>
+            </div>
+        </div>
+    </div>
+</td>
+</tr>
+<tr><td colspan="7">
+<div id="d15" class="details-content">
+<strong>Entry Fee:</strong> <span class="fee-highlight">AED 1 per person (cash directly to boat captain)</span><br>
+<strong>Nearest Public Parking:</strong> Leave vehicle parked at <span class="parking-highlight">Gold Souk Multi-Storey</span> on the Deira side and take the Abra across to Bur Dubai and back.<br>
+<strong>Address:</strong> Deira Old Souk Abra Station to Bur Dubai Marine Station<br>
+<strong>Google Maps:</strong> <a href="https://www.google.com/maps/place/Deira+Old+Souk+Abra+Station" target="_blank">Open Map</a><a class="map-btn" href="https://www.google.com/maps/place/Deira+Old+Souk+Abra+Station" target="_blank">Map</a>
+</div>
+</td></tr>
+
+<tr>
+<td>Oct 20</td>
+<td>Day 5</td>
+<td>🏘️ Al Seef & Meena Bazaar</td>
+<td>2.5 hrs (12:00 PM – 2:30 PM)</td>
+<td><span class="badge badge-lifestyle">Lifestyle</span></td>
+<td><button class="details-btn" onclick="toggleDetails('d16')">View Details</button></td>
+<td>
+    <div class="note-container">
+        <textarea id="note-d16" class="note-input" maxlength="1000" oninput="updateCharCount('d16')" placeholder="Add notes here..."></textarea>
+        <div class="note-actions">
+            <span id="count-d16" class="char-count">1000 left</span>
+            <div>
+                <span id="save-status-d16" class="save-indicator">Saved!</span>
+                <button class="save-btn" onclick="saveNote('d16')">Save</button>
+            </div>
+        </div>
+    </div>
+</td>
+</tr>
+<tr><td colspan="7">
+<div id="d16" class="details-content">
+<strong>Entry Fee:</strong> <span class="fee-highlight">Free</span><br>
+<strong>Nearest Public Parking:</strong> <span class="parking-highlight">Souk Al Seef Underground Parking</span> (Al Seef St, Bur Dubai) — Over 3,000 free self-parking slots in modern and heritage sectors; or <span class="parking-highlight">Al Fahidi RTA Multi-Storey</span> for Meena Bazaar.<br>
+<strong>Address:</strong> Al Seef St / Al Fahidi Historic District<br>
+<strong>Google Maps:</strong> <a href="https://www.google.com/maps/place/Al+Seef" target="_blank">Open Map</a><a class="map-btn" href="https://www.google.com/maps/place/Al+Seef" target="_blank">Map</a><br>
+<strong>Food Nearby:</strong> Skafos, Al Fanar, Sind Punjab, Al Ustad Special Kebab
+</div>
+</td></tr>
+
+<tr>
+<td>Oct 20</td>
+<td>Day 5</td>
+<td>🏨 Return to Premier Inn Barsha Heights</td>
+<td>Rest & Evening</td>
+<td><span class="badge badge-lifestyle">Lifestyle</span></td>
+<td><button class="details-btn" onclick="toggleDetails('d17')">View Details</button></td>
+<td>
+    <div class="note-container">
+        <textarea id="note-d17" class="note-input" maxlength="1000" oninput="updateCharCount('d17')" placeholder="Add notes here..."></textarea>
+        <div class="note-actions">
+            <span id="count-d17" class="char-count">1000 left</span>
+            <div>
+                <span id="save-status-d17" class="save-indicator">Saved!</span>
+                <button class="save-btn" onclick="saveNote('d17')">Save</button>
+            </div>
+        </div>
+    </div>
+</td>
+</tr>
+<tr><td colspan="7">
+<div id="d17" class="details-content">
+<strong>Timing Note:</strong> <span class="parking-highlight">Depart Al Seef by 3:15 PM</span> via Al Khail Rd (E44) or Sheikh Zayed Rd (E11) to easily reach Premier Inn Barsha Heights by 4:00 PM (safely before 5:00 PM).
+</div>
+</td></tr>
+
+<!-- DAY 6: SAFARI PARK, CREEK & DOWNTOWN EVENING (OCT 21) -->
+<tr>
+<td>Oct 21</td>
+<td>Day 6</td>
+<td>🦁 Dubai Safari Park</td>
+<td>4 hrs (Morning)</td>
+<td><span class="badge badge-park">Park</span></td>
+<td><button class="details-btn" onclick="toggleDetails('d18')">View Details</button></td>
+<td>
+    <div class="note-container">
+        <textarea id="note-d18" class="note-input" maxlength="1000" oninput="updateCharCount('d18')" placeholder="Add notes here..."></textarea>
+        <div class="note-actions">
+            <span id="count-d18" class="char-count">1000 left</span>
+            <div>
+                <span id="save-status-d18" class="save-indicator">Saved!</span>
+                <button class="save-btn" onclick="saveNote('d18')">Save</button>
+            </div>
+        </div>
+    </div>
+</td>
+</tr>
+<tr><td colspan="7">
+<div id="d18" class="details-content">
+<strong>Entry Fee:</strong> <span class="fee-highlight">AED 50 (Day Pass) / AED 75 (Safari Journey)</span><br>
+<strong>Nearest Public Parking:</strong> <span class="parking-highlight">Dubai Safari Park Visitor Car Park</span> (Al Warqa 5) — Massive dedicated surface parking with free parking for all ticket holders.<br>
+<strong>Address:</strong> Al Warqa 5, Dubai<br>
+<strong>Google Maps:</strong> <a href="https://www.google.com/maps/place/Dubai+Safari+Park" target="_blank">Open Map</a><a class="map-btn" href="https://www.google.com/maps/place/Dubai+Safari+Park" target="_blank">Map</a><br>
+<strong>Food Nearby:</strong> Safari village food stalls
+</div>
+</td></tr>
+
+<tr>
+<td>Oct 21</td>
+<td>Day 6</td>
+<td>🌳 Creek Park & Dolphinarium</td>
+<td>2.5 hrs (Afternoon)</td>
+<td><span class="badge badge-attraction">Attraction</span></td>
+<td><button class="details-btn" onclick="toggleDetails('d19')">View Details</button></td>
+<td>
+    <div class="note-container">
+        <textarea id="note-d19" class="note-input" maxlength="1000" oninput="updateCharCount('d19')" placeholder="Add notes here..."></textarea>
+        <div class="note-actions">
+            <span id="count-d19" class="char-count">1000 left</span>
+            <div>
+                <span id="save-status-d19" class="save-indicator">Saved!</span>
+                <button class="save-btn" onclick="saveNote('d19')">Save</button>
+            </div>
+        </div>
+    </div>
+</td>
+</tr>
+<tr><td colspan="7">
+<div id="d19" class="details-content">
+<strong>Entry Fee:</strong> <span class="fee-highlight">Park: AED 5 (Nol) | Dolphinarium: ~AED 105 – 125</span><br>
+<strong>Nearest Public Parking:</strong> <span class="parking-highlight">Creek Park Gate 1 Parking</span> (Umm Hurair 2, near Riyadh St) — Dedicated RTA public parking bays directly opposite the Dolphinarium entrance.<br>
+<strong>Address:</strong> Inside Dubai Creek Park Gate 1<br>
+<strong>Google Maps:</strong> <a href="https://www.google.com/maps/place/Dubai+Dolphinarium" target="_blank">Open Map</a><a class="map-btn" href="https://www.google.com/maps/place/Dubai+Dolphinarium" target="_blank">Map</a><br>
+<strong>Food Nearby:</strong> Wafi Mall dining, Creek Park snack bars
+</div>
+</td></tr>
+
+<tr>
+<td>Oct 21</td>
+<td>Day 6</td>
+<td>🛒 Dubai Mall, Burj Khalifa & Fountains</td>
+<td>4 hrs (Evening)</td>
+<td><span class="badge badge-mall">Mall</span></td>
+<td><button class="details-btn" onclick="toggleDetails('d20')">View Details</button></td>
+<td>
+    <div class="note-container">
+        <textarea id="note-d20" class="note-input" maxlength="1000" oninput="updateCharCount('d20')" placeholder="Add notes here..."></textarea>
+        <div class="note-actions">
+            <span id="count-d20" class="char-count">1000 left</span>
+            <div>
+                <span id="save-status-d20" class="save-indicator">Saved!</span>
+                <button class="save-btn" onclick="saveNote('d20')">Save</button>
+            </div>
+        </div>
+    </div>
+</td>
+</tr>
+<tr><td colspan="7">
+<div id="d20" class="details-content">
+<strong>Entry Fee:</strong> <span class="fee-highlight">Mall & Fountains: Free | Burj Khalifa: ~AED 179 – 259</span><br>
+<strong>Nearest Public Parking:</strong> <span class="parking-highlight">Dubai Mall Grand Parking / Cinema Parking / Fashion Parking</span> (Financial Center Rd) — Free first 4 hours on weekdays (Salik smart system); easy elevator access directly to At The Top & Fountain promenade.<br>
+<strong>Address:</strong> Downtown Dubai<br>
+<strong>Google Maps:</strong> <a href="https://www.google.com/maps/place/The+Dubai+Mall" target="_blank">Open Map</a><a class="map-btn" href="https://www.google.com/maps/place/The+Dubai+Mall" target="_blank">Map</a><br>
+<strong>Food Nearby:</strong> Time Out Market, Cheesecake Factory, Din Tai Fung
+</div>
+</td></tr>
+
+<!-- DAY 7: ABU DHABI DAY TRIP (OCT 22) -->
+<tr>
+<td>Oct 22</td>
+<td>Day 7</td>
+<td>🕌 Sheikh Zayed Grand Mosque</td>
+<td>2.5 hrs (Morning)</td>
+<td><span class="badge badge-landmark">Landmark</span></td>
+<td><button class="details-btn" onclick="toggleDetails('d21')">View Details</button></td>
+<td>
+    <div class="note-container">
+        <textarea id="note-d21" class="note-input" maxlength="1000" oninput="updateCharCount('d21')" placeholder="Add notes here..."></textarea>
+        <div class="note-actions">
+            <span id="count-d21" class="char-count">1000 left</span>
+            <div>
+                <span id="save-status-d21" class="save-indicator">Saved!</span>
+                <button class="save-btn" onclick="saveNote('d21')">Save</button>
+            </div>
+        </div>
+    </div>
+</td>
+</tr>
+<tr><td colspan="7">
+<div id="d21" class="details-content">
+<strong>Entry Fee:</strong> <span class="fee-highlight">Free (Pre-booking online pass required)</span><br>
+<strong>Nearest Public Parking:</strong> <span class="parking-highlight">Grand Mosque Southern Visitor Car Park</span> (Sheikh Rashid Bin Saeed St, Abu Dhabi) — Free covered underground parking directly connecting to the underground visitor dome (Souq Al Jami).<br>
+<strong>Address:</strong> Sheikh Rashid Bin Saeed St, Abu Dhabi<br>
+<strong>Google Maps:</strong> <a href="https://www.google.com/maps/place/Sheikh+Zayed+Grand+Mosque" target="_blank">Open Map</a><a class="map-btn" href="https://www.google.com/maps/place/Sheikh+Zayed+Grand+Mosque" target="_blank">Map</a><br>
+<strong>Food Nearby:</strong> Souq Al Jami food court
+</div>
+</td></tr>
+
+<tr>
+<td>Oct 22</td>
+<td>Day 7</td>
+<td>🖼️ Louvre Abu Dhabi</td>
+<td>2 hrs (Afternoon)</td>
+<td><span class="badge badge-museum">Museum</span></td>
+<td><button class="details-btn" onclick="toggleDetails('d22')">View Details</button></td>
+<td>
+    <div class="note-container">
+        <textarea id="note-d22" class="note-input" maxlength="1000" oninput="updateCharCount('d22')" placeholder="Add notes here..."></textarea>
+        <div class="note-actions">
+            <span id="count-d22" class="char-count">1000 left</span>
+            <div>
+                <span id="save-status-d22" class="save-indicator">Saved!</span>
+                <button class="save-btn" onclick="saveNote('d22')">Save</button>
+            </div>
+        </div>
+    </div>
+</td>
+</tr>
+<tr><td colspan="7">
+<div id="d22" class="details-content">
+<strong>Entry Fee:</strong> <span class="fee-highlight">AED 63 (Adults; under 18 Free)</span><br>
+<strong>Nearest Public Parking:</strong> <span class="parking-highlight">Louvre Abu Dhabi Visitor Parking</span> (Saadiyat Cultural District) — Free open-air and shaded parking for all ticketed guests.<br>
+<strong>Address:</strong> Saadiyat Island, Abu Dhabi<br>
+<strong>Google Maps:</strong> <a href="https://www.google.com/maps/place/Louvre+Abu+Dhabi" target="_blank">Open Map</a><a class="map-btn" href="https://www.google.com/maps/place/Louvre+Abu+Dhabi" target="_blank">Map</a><br>
+<strong>Food Nearby:</strong> Aptitude Café, Museum Café
+</div>
+</td></tr>
+
+<tr>
+<td>Oct 22</td>
+<td>Day 7</td>
+<td>🏛️ Qasr Al Watan & Emirates Palace</td>
+<td>3 hrs</td>
+<td><span class="badge badge-cultural">Cultural</span></td>
+<td><button class="details-btn" onclick="toggleDetails('d23')">View Details</button></td>
+<td>
+    <div class="note-container">
+        <textarea id="note-d23" class="note-input" maxlength="1000" oninput="updateCharCount('d23')" placeholder="Add notes here..."></textarea>
+        <div class="note-actions">
+            <span id="count-d23" class="char-count">1000 left</span>
+            <div>
+                <span id="save-status-d23" class="save-indicator">Saved!</span>
+                <button class="save-btn" onclick="saveNote('d23')">Save</button>
+            </div>
+        </div>
+    </div>
+</td>
+</tr>
+<tr><td colspan="7">
+<div id="d23" class="details-content">
+<strong>Entry Fee:</strong> <span class="fee-highlight">Qasr Al Watan: AED 65 | Emirates Palace: Free (Lobby)</span><br>
+<strong>Nearest Public Parking:</strong> <span class="parking-highlight">Qasr Al Watan Visitor Centre Car Park</span> (Al Ras Al Akhdar) — Free on-site visitor parking with complimentary shuttles to palace gates. Emirates Palace has dedicated free visitor parking at main gate entrance.<br>
+<strong>Address:</strong> West Corniche / Presidential Palace Area, Abu Dhabi<br>
+<strong>Google Maps:</strong> <a href="https://www.google.com/maps/place/Qasr+Al+Watan" target="_blank">Open Map</a><a class="map-btn" href="https://www.google.com/maps/place/Qasr+Al+Watan" target="_blank">Map</a><br>
+<strong>Food Nearby:</strong> Le Café (Emirates Palace), Dhiyafat Qasr Al Watan
+</div>
+</td></tr>
+
+<!-- DAY 8: DESERT SAFARI (OCT 23) -->
+<tr>
+<td>Oct 23</td>
+<td>Day 8</td>
+<td>🏜️ Desert Safari Tour Pickup & Camp</td>
+<td>6 hrs (2:30 PM – 9:00 PM)</td>
+<td><span class="badge badge-adventure">Adventure</span></td>
+<td><button class="details-btn" onclick="toggleDetails('d24')">View Details</button></td>
+<td>
+    <div class="note-container">
+        <textarea id="note-d24" class="note-input" maxlength="1000" oninput="updateCharCount('d24')" placeholder="Add notes here..."></textarea>
+        <div class="note-actions">
+            <span id="count-d24" class="char-count">1000 left</span>
+            <div>
+                <span id="save-status-d24" class="save-indicator">Saved!</span>
+                <button class="save-btn" onclick="saveNote('d24')">Save</button>
+            </div>
+        </div>
+    </div>
+</td>
+</tr>
+<tr><td colspan="7">
+<div id="d24" class="details-content">
+<strong>Entry Fee:</strong> <span class="fee-highlight">~AED 140 – 220 per person (complete package)</span><br>
+<strong>Parking Details:</strong> <span class="parking-highlight">No driving required.</span> Leave your rental car parked in the Premier Inn Barsha Heights hotel garage. Tour operator 4x4 picks you up directly from hotel reception.<br>
+<strong>Activities:</strong> Dune bashing, sandboarding, camel ride, Tanoura & belly dance show, full BBQ buffet dinner.<br>
+<strong>Google Maps:</strong> <a href="https://www.google.com/maps/place/Lahbab+Desert" target="_blank">Open Map</a><a class="map-btn" href="https://www.google.com/maps/place/Lahbab+Desert" target="_blank">Map</a>
+</div>
+</td></tr>
+
+<!-- DAY 9: SOUVENIRS & DEPARTURE (OCT 24) -->
+<tr>
+<td>Oct 24</td>
+<td>Day 9</td>
+<td>🛍️ Dubai Hills Mall & Check-out</td>
+<td>3 hrs (Morning)</td>
+<td><span class="badge badge-mall">Mall</span></td>
+<td><button class="details-btn" onclick="toggleDetails('d25')">View Details</button></td>
+<td>
+    <div class="note-container">
+        <textarea id="note-d25" class="note-input" maxlength="1000" oninput="updateCharCount('d25')" placeholder="Add notes here..."></textarea>
+        <div class="note-actions">
+            <span id="count-d25" class="char-count">1000 left</span>
+            <div>
+                <span id="save-status-d25" class="save-indicator">Saved!</span>
+                <button class="save-btn" onclick="saveNote('d25')">Save</button>
+            </div>
+        </div>
+    </div>
+</td>
+</tr>
+<tr><td colspan="7">
+<div id="d25" class="details-content">
+<strong>Entry Fee:</strong> <span class="fee-highlight">Free</span><br>
+<strong>Nearest Public Parking:</strong> <span class="parking-highlight">Dubai Hills Mall Covered Parking</span> (Al Khail Rd / Umm Suqeim St) — Over 7,000 free covered parking bays.<br>
+<strong>Address:</strong> Dubai Hills Estate (10 mins from Premier Inn Barsha Heights)<br>
+<strong>Google Maps:</strong> <a href="https://www.google.com/maps/place/Dubai+Hills+Mall" target="_blank">Open Map</a><a class="map-btn" href="https://www.google.com/maps/place/Dubai+Hills+Mall" target="_blank">Map</a><br>
+<strong>Food Nearby:</strong> Ladurée, Czn Burak Burger, Joe & The Juice
+</div>
+</td></tr>
+
+<tr>
+<td>Oct 24</td>
+<td>Day 9</td>
+<td>✈️ DXB Airport Drop-off & Departure</td>
+<td>2 hrs</td>
+<td><span class="badge badge-landmark">Landmark</span></td>
+<td><button class="details-btn" onclick="toggleDetails('d26')">View Details</button></td>
+<td>
+    <div class="note-container">
+        <textarea id="note-d26" class="note-input" maxlength="1000" oninput="updateCharCount('d26')" placeholder="Add notes here..."></textarea>
+        <div class="note-actions">
+            <span id="count-d26" class="char-count">1000 left</span>
+            <div>
+                <span id="save-status-d26" class="save-indicator">Saved!</span>
+                <button class="save-btn" onclick="saveNote('d26')">Save</button>
+            </div>
+        </div>
+    </div>
+</td>
+</tr>
+<tr><td colspan="7">
+<div id="d26" class="details-content">
+<strong>Nearest Parking / Drop-off:</strong> <span class="parking-highlight">DXB Airport Terminal 1 / Terminal 3 Car Park A & B</span> or Car Rental Return Depots directly inside the airport structure.<br>
+<strong>Address:</strong> Dubai International Airport (DXB)<br>
+<strong>Google Maps:</strong> <a href="https://www.google.com/maps/place/Dubai+International+Airport" target="_blank">Open Map</a><a class="map-btn" href="https://www.google.com/maps/place/Dubai+International+Airport" target="_blank">Map</a>
+</div>
+</td></tr>
+
+</tbody>
+</table>
